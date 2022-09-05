@@ -1,0 +1,80 @@
+<form class="form" [formGroup]="form">
+    <h1>Frontend Engineer form</h1>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>First name</mat-label>
+        <input type="text" matInput formControlName="name" required>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Last name</mat-label>
+        <input type="text" matInput formControlName="lastName" required>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Date of birth</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="birthDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Front-end technology</mat-label>
+        <mat-select formControlName="tech">
+            <mat-option *ngFor="let tech of feTech" [value]="tech.value">
+                {{tech.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill">
+        <mat-label>Front-end technology version</mat-label>
+        <mat-select formControlName="techVersion" [disabled]="!currentVerseLength">
+            <mat-option *ngFor="let ver of currentVerse" [value]="ver">
+                {{ ver }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" email required>
+    </mat-form-field>
+
+    <div class="hobbys">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Hobby name </mat-label>
+            <input type="text" matInput formControlName="hobbyName">
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Hobby duration</mat-label>
+            <input type="number" matInput formControlName="hobbyDuration">
+        </mat-form-field>
+        <button mat-raised-button (click)="addHobby()">Add hobby</button>
+        <ul>
+            <li *ngFor="let hobby of hobbies; let idx = index">
+                {{hobby.name}} - {{hobby.duration}} <button (click)="removeHobby(idx)">X</button>
+            </li>
+        </ul>
+    </div>
+
+</form>
+<div class="form">
+    <hr>
+    <pre>
+    Value : {{form.value | json }}
+</pre>
+    <hr>
+
+    <div>{{ name }}</div>
+    <div>{{ lastName }}</div>
+    <div>{{ birthDate }}</div>
+    <div>{{ usedTech }}</div>
+    <!-- <div *ngFor="let version of feTechVersion[usedTech]">
+        {{ version }}
+    </div> -->
+
+</div>

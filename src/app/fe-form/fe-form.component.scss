@@ -1,0 +1,10 @@
+.form {
+    margin: 60px auto;
+    display: flex;
+    flex-flow: column;
+    max-width: 550px;
+    justify-items: center;
+    h1 {
+        text-align: center;
+    }
+}
