@@ -13,7 +13,7 @@ export class SendFormService {
 
   sendForm(formRes: any) {
     const formDate = new Date(Date.parse(formRes.dateOfBirth))
-    
+
     const day = formDate.getDay() + 4;
     const month = formDate.getMonth() + 1;
     const year = formDate.getFullYear();

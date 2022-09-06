@@ -1,85 +1,66 @@
-import { Component, Input } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, FormArray } from "@angular/forms"
 import { SendFormService } from "../send-form.service";
 
 @Component({
   selector: 'app-fe-form',
   templateUrl: './fe-form.component.html',
-  styleUrls: ['./fe-form.component.scss'],
-  providers: [SendFormService]
+  styleUrls: ['./fe-form.component.scss']
 })
-export class FeFormComponent {
-
+export class FeFormComponent implements OnInit {
   form!: FormGroup;
-
-  hobbies: { name: string, duration: string }[] = []
-
-
-  feFrameworks = [
-    { label: "Angular", value: "angular" },
-    { label: "React", value: "react" },
-    { label: "Vue", value: "vue" },
+  hobbies!: FormArray;
+  frameworks = [
+    "angular",
+    "react",
+    "vue",
   ]
 
-  feFrameworkVersion: any = {
+  frameworksVersions: { [index: string]: any } = {
     "angular": ['1.1.1', '1.2.1', '1.3.3'],
     "react": ['2.1.2', '3.2.4', '4.3.1'],
     "vue": ['3.3.1', '5.2.1', '5.1.3'],
     "": []
   }
 
-  get currentVerse(): string[] {
-    return this.feFrameworkVersion[this.form.value.framework];
-  }
-  get currentVerseLength(): string[] {
-    return this.feFrameworkVersion[this.form.value.framework].length;
+  get currentFramework(): string {
+    return (<FormControl>this.form.get("framework")).value ?? "";
   }
 
-  constructor(private fb: FormBuilder, private sendFormService: SendFormService) { }
+  get currentVersions(): string[] {
+    return this.frameworksVersions[this.currentFramework];
+  }
 
-  ngOnInit() {
-    this.form = this.fb.group({
+  constructor(private sendFormService:SendFormService) { }
+
+  ngOnInit(): void {
+    this.hobbies = new FormArray([
+      this.createHobbyFormGroup()
+    ])
+
+    this.form = new FormGroup({
       firstName: new FormControl(""),
       lastName: new FormControl(""),
       dateOfBirth: new FormControl(""),
       framework: new FormControl(""),
       frameworkVersion: new FormControl(""),
       email: new FormControl(""),
-      hobbyName: new FormControl(""),
-      hobbyDuration: new FormControl(""),
+      hobbies: this.hobbies
     })
   }
 
-  createHobbyFormControl(): FormGroup {
+  addHobby() {
+    this.hobbies.push(this.createHobbyFormGroup())
+  }
+
+  createHobbyFormGroup() {
     return new FormGroup({
-      name: this.fb.control("footbal"),
-      duration: this.fb.control("two month")
+      name: new FormControl(""),
+      duration: new FormControl("")
     })
   }
 
-  addHobby(event: Event) {
-    event.preventDefault();
-
-    if (this.form.get("hobbyName")?.value && this.form.get("hobbyDuration")?.value)
-      this.hobbies.push({
-        name: this.form.value.hobbyName,
-        duration: this.form.value.hobbyDuration + " month"
-      });
-
-      this.form.get("hobbyName")?.reset()
-      this.form.get("hobbyDuration")?.reset()
-  }
-
-  removeHobby(index: number) {
-    this.hobbies.splice(index, 1);
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      this.sendFormService.sendForm({
-        ...this.form.value,
-        hobbies: this.hobbies
-      })
-    }
+  postForm() {
+    this.sendFormService.sendForm(this.form.value)
   }
 }
