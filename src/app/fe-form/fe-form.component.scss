@@ -2,12 +2,14 @@
     margin: auto;
     max-width: 550px;
     padding: 15px;
-
 }
 
 .container form {
     display: flex;
     flex-flow: column;
+}
+.remove-hobby-btn {
+    margin-left: 10px;
 }
 
 .btn {
@@ -15,6 +17,6 @@
     margin-bottom: 15px;
 }
 
-.hobbies__item mat-form-field:nth-child(2) {
+.hobby-item mat-form-field:nth-child(2) {
     margin-left: 15px;
 }
