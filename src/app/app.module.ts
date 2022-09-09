@@ -8,7 +8,7 @@ import { MaterialModule } from './material/material.module';
 @NgModule({
   declarations: [
     AppComponent,
-    FeFormComponent
+    FeFormComponent,
   ],
   imports: [
     BrowserModule,

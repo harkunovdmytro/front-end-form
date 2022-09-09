@@ -10,11 +10,9 @@ export class SendFormService {
 
   // constructor(private http: HttpClient) { }
 
-
   sendForm(formRes: FormRequest): void {
     // return this.http.post(this.LINK, formRes);
 
     console.log(formRes);
   }
-
 }

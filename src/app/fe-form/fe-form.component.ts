@@ -1,26 +1,20 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, FormArray } from '@angular/forms'
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { SendFormService } from '../services/send-form.service';
 import { Validators } from '@angular/forms';
 import { FormRequest } from '../interfaces/form-request';
-
-const getFrameworksVersions = () => ({
-  angular: ['1.1.1', '1.2.1', '1.3.3'],
-  react: ['2.1.2', '3.2.4', '4.3.1'],
-  vue: ['3.3.1', '5.2.1', '5.1.3'],
-  '': []
-});
+import { frameworks, frameworksVersions } from '../constants';
 
 @Component({
   selector: 'app-fe-form',
   templateUrl: './fe-form.component.html',
-  styleUrls: ['./fe-form.component.scss']
+  styleUrls: ['./fe-form.component.scss'],
 })
 export class FeFormComponent {
-  frameworks = ['angular', 'react', 'vue'];
 
-  frameworksVersions: { [index: string]: any } = getFrameworksVersions();
-  
+  frameworks: string[] = frameworks;
+  frameworksVersions: { [index: string]: string[] } = frameworksVersions;
+
   hobby = new FormArray([
     this.createHobbyFormGroup()
   ]);
@@ -37,13 +31,17 @@ export class FeFormComponent {
 
   get currentFramework(): string {
     return (<FormControl>this.form.get('framework')).value ?? '';
-  }
+  };
 
   get currentVersions(): string[] {
     return this.frameworksVersions[this.currentFramework];
-  }
+  };
 
   constructor(private sendFormService: SendFormService) { }
+
+  isFieldValid(fieldName: string): boolean {
+    return Boolean(this.form.get(fieldName)?.invalid && this.form.get(fieldName)?.touched);
+  };
 
   addHobby(event: Event): void {
     event.preventDefault();
@@ -55,7 +53,7 @@ export class FeFormComponent {
     this.hobby.removeAt(id);
   };
 
-  postForm() {
+  postForm(): void {
     const formDate = new Date(Date.parse((<FormControl>this.form.get('dateOfBirth'))?.value));
 
     const day = formDate.getDay() + 4;
@@ -71,13 +69,13 @@ export class FeFormComponent {
       ...this.form.value,
       dateOfBirth: date,
       hobby: hobby,
-    })
+    });
   };
 
   private createHobbyFormGroup() {
     return new FormGroup({
       name: new FormControl('', { validators: [Validators.required] }),
       duration: new FormControl('', { validators: [Validators.required] })
-    }, { validators: [Validators.required] })
-  }
+    }, { validators: [Validators.required] });
+  };
 };

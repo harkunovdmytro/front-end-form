@@ -9,7 +9,7 @@
                 matInput
                 formControlName="firstName"
             >
-            <mat-hint *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched">Field is empty. Fill it.</mat-hint>
+            <mat-hint *ngIf="isFieldValid('firstName')">Field is empty. Fill it.</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
@@ -18,7 +18,7 @@
                 matInput
                 formControlName="lastName"
             >
-            <mat-hint *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched">Field is empty. Fill it.</mat-hint>
+            <mat-hint *ngIf="isFieldValid('lastName')">Field is empty. Fill it.</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
@@ -28,7 +28,7 @@
                 formControlName="dateOfBirth"
                 [matDatepicker]="picker"
             >
-            <mat-hint *ngIf="form.get('dateOfBirth')?.touched&&form.get('dateOfBirth')?.invalid">Pick your birth date</mat-hint>
+            <mat-hint *ngIf="isFieldValid('dateOfBirth')">Pick your birth date</mat-hint>
             <mat-datepicker-toggle
                 matSuffix
                 [for]="picker"
@@ -60,11 +60,9 @@
             >
                 <mat-option
                     *ngFor="let version of currentVersions"
-                    value="{{version}}"
+                    [value]="version"
                 >
-                    {{
-                    version |
-                    titlecase}}
+                    {{ version | titlecase }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -110,26 +108,20 @@
                     mat-raised-button
                     color="warn"
                     (click)="removeHobby($event,i)"
-                >
-                    Remove
-                </button>
+                >Remove</button>
             </div>
             <button
                 class="btn"
                 mat-stroked-button
                 (click)="addHobby($event)"
-            >
-                Add hobby
-            </button>
+            >Add hobby</button>
         </div>
         <div>
             <button
-            mat-raised-button
-            color="primary"
-            [disabled]="form.invalid"
-            >
-                Submit form
-            </button>
+                mat-raised-button
+                color="primary"
+                [disabled]="form.invalid"
+            >Submit form</button>
         </div>
     </form>
 </section>
