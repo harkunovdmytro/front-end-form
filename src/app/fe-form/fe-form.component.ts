@@ -16,7 +16,7 @@ export class FeFormComponent {
   frameworksVersions: { [index: string]: string[] } = frameworksVersions;
 
   hobbies = new FormArray([
-    this.createHobbyFormGroup(),
+    this.createHobbyFormGroup()
   ]);
 
   form = new FormGroup({
@@ -67,7 +67,7 @@ export class FeFormComponent {
 
     this.sendFormService.sendForm(<FormRequest>{
       ...this.form.value,
-      dateOfBirth: this.formatDate((<FormControl>this.form.get('dateOfBirth'))?.value),
+      dateOfBirth: date,
       hobbies,
     });
   };
