@@ -16,7 +16,7 @@ export class FeFormComponent {
   frameworksVersions: { [index: string]: string[] } = frameworksVersions;
 
   hobbies = new FormArray([
-    this.createHobbyFormGroup()
+    this.createHobbyFormGroup(),
   ]);
 
   form = new FormGroup({
@@ -37,7 +37,7 @@ export class FeFormComponent {
     return this.frameworksVersions[this.currentFramework];
   };
 
-  constructor(private sendFormService: SendFormService) { }
+  constructor(private sendFormService: SendFormService) { };
 
   isFieldValid(fieldName: string): boolean {
     return Boolean(this.form.get(fieldName)?.invalid && this.form.get(fieldName)?.touched);

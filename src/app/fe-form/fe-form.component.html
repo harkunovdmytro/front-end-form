@@ -12,7 +12,6 @@
             <mat-hint *ngIf="isFieldValid('firstName')">Field is empty. Fill it.</mat-hint>
         </mat-form-field>
 
-
         <mat-form-field>
             <mat-label>Last name</mat-label>
             <input
@@ -21,7 +20,6 @@
             >
             <mat-hint *ngIf="isFieldValid('lastName')">Field is empty. Fill it.</mat-hint>
         </mat-form-field>
-
 
         <mat-form-field>
             <mat-label>Choose a date</mat-label>
@@ -52,7 +50,6 @@
             </mat-select>
         </mat-form-field>
 
-
         <mat-form-field>
             <mat-label>Choose a framework version</mat-label>
             <mat-select
@@ -67,7 +64,6 @@
             </mat-select>
         </mat-form-field>
 
-
         <mat-form-field>
             <mat-label>Email</mat-label>
             <input
@@ -75,7 +71,6 @@
                 formControlName="email"
             >
         </mat-form-field>
-
 
         <div
             formArrayName="hobbies"
@@ -95,7 +90,6 @@
                     >
                 </mat-form-field>
 
-
                 <mat-form-field appearance="outline">
                     <mat-label>Hobby experience (month)</mat-label>
                     <input
@@ -104,7 +98,6 @@
                         formControlName="duration"
                     >
                 </mat-form-field>
-
 
                 <button
                     *ngIf="i !== 0"
