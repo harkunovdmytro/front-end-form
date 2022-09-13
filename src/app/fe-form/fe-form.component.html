@@ -54,10 +54,10 @@
             <mat-select
                 matInput
                 formControlName="frameworkVersion"
-                [disabled]="form.get('framework')?.value ==''"
+                [disabled]="!currentFramework$.value"
             >
                 <mat-option
-                    *ngFor="let version of currentVersions"
+                    *ngFor="let version of currentVersions$.value"
                     [value]="version"
                 >{{ version | titlecase }}</mat-option>
             </mat-select>

@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { SendFormService } from '../services/send-form.service';
 import { Validators } from '@angular/forms';
 import { FormRequest } from '../interfaces/form-request';
-import { frameworks, frameworksVersions } from '../constants';
+import { frameworks, frameworksVersions } from '../constants/form-constants';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-fe-form',
   templateUrl: './fe-form.component.html',
   styleUrls: ['./fe-form.component.scss'],
 })
-export class FeFormComponent {
+export class FeFormComponent implements OnInit {
 
   frameworks: string[] = frameworks;
   frameworksVersions: { [index: string]: string[] } = frameworksVersions;
@@ -29,15 +30,18 @@ export class FeFormComponent {
     hobbies: this.hobbies,
   });
 
-  get currentFramework(): string {
-    return (<FormControl>this.form.get('framework')).value ?? '';
-  };
-
-  get currentVersions(): string[] {
-    return this.frameworksVersions[this.currentFramework];
-  };
+  currentFramework$ = new BehaviorSubject<string>('');
+  currentVersions$ = new BehaviorSubject<string[]>([]);
 
   constructor(private sendFormService: SendFormService) { };
+
+  ngOnInit() {
+    this.form.controls.framework.valueChanges
+      .subscribe((e) => {
+        this.currentFramework$.next(e || '');
+        this.currentVersions$.next(this.frameworksVersions[this.currentFramework$.value])
+      })
+  }
 
   isFieldValid(fieldName: string): boolean {
     return Boolean(this.form.get(fieldName)?.invalid && this.form.get(fieldName)?.touched);
