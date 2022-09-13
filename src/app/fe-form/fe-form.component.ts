@@ -54,7 +54,6 @@ export class FeFormComponent {
   };
 
   postForm(): void {
-    console.log()
     const date = this.formatDate((<FormControl>this.form.get('dateOfBirth'))?.value);
 
     const hobbies = this.form.get('hobbies')?.value.map((item) => ({ ...item, duration: (item.duration + ' month') }));
