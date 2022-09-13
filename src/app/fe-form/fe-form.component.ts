@@ -54,14 +54,8 @@ export class FeFormComponent {
   };
 
   postForm(): void {
-    const formDate = new Date(Date.parse((<FormControl>this.form.get('dateOfBirth'))?.value));
-
-    const day = formDate.getDay() + 4;
-    const month = formDate.getMonth() + 1;
-    const year = formDate.getFullYear();
-
-    const date = (day > 9 ? day : '0' + day) + '-'
-      + (month > 9 ? month : '0' + month) + '-' + year;
+    console.log()
+    const date = this.formatDate((<FormControl>this.form.get('dateOfBirth'))?.value);
 
     const hobbies = this.form.get('hobbies')?.value.map((item) => ({ ...item, duration: (item.duration + ' month') }));
 
