@@ -69,6 +69,7 @@
                 matInput
                 formControlName="email"
             >
+            <mat-hint *ngIf="form.controls.email.errors?.['emailExist']">This email already exist.</mat-hint>
         </mat-form-field>
 
         <div

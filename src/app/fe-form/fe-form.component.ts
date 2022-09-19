@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { SendFormService } from '../services/send-form.service';
-import { Validators } from '@angular/forms';
 import { FormRequest } from '../interfaces/form-request';
 import { frameworks, frameworksVersions } from '../constants/form-constants';
 import { BehaviorSubject } from 'rxjs';
+import { UsernameValidationService } from './fe-form.service';
 
 @Component({
   selector: 'app-fe-form',
   templateUrl: './fe-form.component.html',
-  styleUrls: ['./fe-form.component.scss'],
+  styleUrls: ['./fe-form.component.scss',],
+  providers: [UsernameValidationService,],
 })
 export class FeFormComponent implements OnInit {
-
   frameworks: string[] = frameworks;
   frameworksVersions: { [index: string]: string[] } = frameworksVersions;
 
@@ -21,26 +21,35 @@ export class FeFormComponent implements OnInit {
   ]);
 
   form = new FormGroup({
-    firstName: new FormControl('', { validators: [Validators.required] }),
-    lastName: new FormControl('', { validators: [Validators.required] }),
-    dateOfBirth: new FormControl('', { validators: [Validators.required] }),
-    framework: new FormControl('', { validators: [Validators.required] }),
-    frameworkVersion: new FormControl('', { validators: [Validators.required] }),
-    email: new FormControl('', { validators: [Validators.required, Validators.email] }),
+    firstName: new FormControl('', { validators: [Validators.required,] }),
+    lastName: new FormControl('', { validators: [Validators.required,] }),
+    dateOfBirth: new FormControl('', { validators: [Validators.required,] }),
+    framework: new FormControl('', { validators: [Validators.required,] }),
+    frameworkVersion: new FormControl('', { validators: [Validators.required,] }),
+    email: new FormControl(
+      '',
+      {
+        validators: [Validators.required, Validators.email,],
+        asyncValidators: [this.usernameService.usernameValidator(),],
+      },
+    ),
     hobbies: this.hobbies,
   });
 
   currentFramework$ = new BehaviorSubject<string>('');
   currentVersions$ = new BehaviorSubject<string[]>([]);
 
-  constructor(private sendFormService: SendFormService) { };
+  constructor(
+    private sendFormService: SendFormService,
+    private usernameService: UsernameValidationService,
+  ) { };
 
   ngOnInit() {
     this.form.controls.framework.valueChanges
       .subscribe((e) => {
         this.currentFramework$.next(e || '');
-        this.currentVersions$.next(this.frameworksVersions[this.currentFramework$.value])
-      })
+        this.currentVersions$.next(this.frameworksVersions[this.currentFramework$.value]);
+      });
   }
 
   isFieldValid(fieldName: string): boolean {
@@ -71,9 +80,9 @@ export class FeFormComponent implements OnInit {
 
   private createHobbyFormGroup() {
     return new FormGroup({
-      name: new FormControl('', { validators: [Validators.required] }),
-      duration: new FormControl('', { validators: [Validators.required] })
-    }, { validators: [Validators.required] });
+      name: new FormControl('', { validators: [Validators.required], }),
+      duration: new FormControl('', { validators: [Validators.required], })
+    }, { validators: [Validators.required,], });
   };
 
   private formatDate(strDate: string): string {
