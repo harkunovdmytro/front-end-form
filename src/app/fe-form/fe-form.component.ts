@@ -4,11 +4,7 @@ import { SendFormService } from '../services/send-form.service';
 import { FormRequest } from '../interfaces/form-request';
 import { frameworks, frameworksVersions } from '../constants/form-constants';
 import { BehaviorSubject } from 'rxjs';
-<<<<<<< HEAD
 import { UsernameValidationService } from './fe-form-validators.service';
-=======
-import { UsernameValidationService } from './fe-form.service';
->>>>>>> d845f66eea8c25c08852a121d5e520ed9a7fcee0
 
 @Component({
   selector: 'app-fe-form',
