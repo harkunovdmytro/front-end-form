@@ -7,6 +7,7 @@ import { catchError, delay, EMPTY, iif, map, Observable, of, switchMap } from 'r
 })
 export class SendFormService {
 
+  private AUTHORIZED_USER_EMAILS = ['test@test.test'];
   private LINK = 'http://localhost:4200';
 
   constructor(private http: HttpClient) { }
@@ -15,27 +16,10 @@ export class SendFormService {
     // return this.http.post(this.LINK, formRes);
 
     console.log(formRes);
+    this.AUTHORIZED_USER_EMAILS.push(formRes.email)
   }
-  checkEmail(email: string): Observable<any> {
-    console.log('checking email: ' + email + '...');
 
-    const success$ = of('success');
-    const fail$ = of('fail');
-
-    return this.http.post(this.LINK + '/users/', { email })
-      .pipe(
-        map(
-          () => iif(
-            // () => (response.status === 200),
-            () => (true),
-            fail$,
-            success$,
-          )),
-        catchError(() => {
-          const errorMessage = 'Request error. Please try again later';
-          console.log(errorMessage);
-          return of(errorMessage);
-        }),
-      );
+  checkIfUsernameExists(username: string): Observable<boolean> {
+    return of(this.AUTHORIZED_USER_EMAILS.includes(username)).pipe(delay(500));
   }
 }

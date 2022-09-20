@@ -54,10 +54,10 @@
             <mat-select
                 matInput
                 formControlName="frameworkVersion"
-                [disabled]="!currentFramework$.value"
+                [disabled]="!(currentVersions$ | async)?.length"
             >
                 <mat-option
-                    *ngFor="let version of currentVersions$.value"
+                    *ngFor="let version of currentVersions$ | async"
                     [value]="version"
                 >{{ version | titlecase }}</mat-option>
             </mat-select>
