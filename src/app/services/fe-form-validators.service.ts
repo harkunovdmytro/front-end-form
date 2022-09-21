@@ -13,10 +13,7 @@ export class UsernameValidationService {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return this.sendFormService.checkIfUsernameExists(control.value)
         .pipe(
-          map(
-            (validationResult): ValidationErrors | null =>
-              validationResult ? {'emailExist': true} : null
-          )
+          map((validationResult): ValidationErrors | null => validationResult ? {'emailExist': true} : null),
         )
     }
   }

@@ -22,16 +22,16 @@ export class FeFormComponent implements OnInit {
   ]);
 
   form = new FormGroup({
-    firstName: new FormControl('', {validators: [Validators.required,]}),
-    lastName: new FormControl('', {validators: [Validators.required,]}),
-    dateOfBirth: new FormControl('', {validators: [Validators.required,]}),
-    framework: new FormControl('', {validators: [Validators.required,]}),
-    frameworkVersion: new FormControl('', {validators: [Validators.required,]}),
+    firstName: new FormControl('', {validators: [Validators.required]}),
+    lastName: new FormControl('', {validators: [Validators.required]}),
+    dateOfBirth: new FormControl('', {validators: [Validators.required]}),
+    framework: new FormControl('', {validators: [Validators.required]}),
+    frameworkVersion: new FormControl('', {validators: [Validators.required]}),
     email: new FormControl(
       '',
       {
-        validators: [Validators.required, Validators.email,],
-        asyncValidators: [this.usernameService.usernameValidator(),]
+        validators: [Validators.required, Validators.email],
+        asyncValidators: [this.usernameService.usernameValidator()],
       },
     ),
     hobbies: this.hobbies,
@@ -69,21 +69,22 @@ export class FeFormComponent implements OnInit {
   postForm(): void {
     const hobbies = this.form.get('hobbies')?.value
       .map((item) =>
-        ({...item, duration: (item.duration + ' month')}));
+        ({
+          ...item,
+          duration: (item.duration + ' month'),
+        }));
 
     this.sendFormService.sendForm(<FormRequest>{
       ...this.form.value,
       hobbies,
-      dateOfBirth: format(
-        new Date(Date.parse((<FormControl>this.form.get('dateOfBirth'))?.value))
-        , 'dd-MM-yyyy'),
+      dateOfBirth: format((<FormControl>this.form.get('dateOfBirth'))?.value, 'dd-MM-yyyy'),
     });
   }
 
   private createHobbyFormGroup() {
     return new FormGroup({
-      name: new FormControl('', {validators: [Validators.required,]}),
-      duration: new FormControl('', {validators: [Validators.required,]}),
+      name: new FormControl('', {validators: [Validators.required]}),
+      duration: new FormControl('', {validators: [Validators.required]}),
     });
   }
 }
