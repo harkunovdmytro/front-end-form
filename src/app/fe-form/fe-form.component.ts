@@ -1,27 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
 import {format} from 'date-fns';
 import {SendFormService} from '../services/send-form.service';
 import {FormRequest} from '../interfaces/form-request';
 import {frameworks, frameworksVersions} from '../constants/form-constants';
-import {UsernameValidationService} from '../services/fe-form-validators.service';
+import {FEFormValidationService} from '../services/fe-form-validators.service';
 
 @Component({
   selector: 'app-fe-form',
   templateUrl: './fe-form.component.html',
   styleUrls: ['./fe-form.component.scss',],
-  providers: [UsernameValidationService,],
+  providers: [FEFormValidationService,],
 })
-export class FeFormComponent implements OnInit {
-  frameworks: string[] = frameworks;
+export class FeFormComponent {
+  frameworks = frameworks;
   frameworksVersions: { [index: string]: string[] } = frameworksVersions;
 
   hobbies = new FormArray([
     this.createHobbyFormGroup(),
   ]);
 
-  form = new FormGroup({
+  frontEndAuthorizationForm = new FormGroup({
     firstName: new FormControl('', {validators: [Validators.required]}),
     lastName: new FormControl('', {validators: [Validators.required]}),
     dateOfBirth: new FormControl('', {validators: [Validators.required]}),
@@ -37,23 +36,14 @@ export class FeFormComponent implements OnInit {
     hobbies: this.hobbies,
   });
 
-  currentVersions$ = new BehaviorSubject<string[]>([]);
-
   constructor(
     private sendFormService: SendFormService,
-    private usernameService: UsernameValidationService,
+    private usernameService: FEFormValidationService,
   ) {
   }
 
-  ngOnInit() {
-    this.form.controls.framework.valueChanges
-      .subscribe((e: string | null) => {
-        this.currentVersions$.next(this.frameworksVersions[String(e)]);
-      });
-  }
-
   isFieldValid(fieldName: string): boolean {
-    return Boolean(this.form.get(fieldName)?.invalid && this.form.get(fieldName)?.touched);
+    return Boolean(this.frontEndAuthorizationForm.get(fieldName)?.invalid && this.frontEndAuthorizationForm.get(fieldName)?.touched);
   }
 
   addHobby(event: Event): void {
@@ -67,21 +57,21 @@ export class FeFormComponent implements OnInit {
   }
 
   postForm(): void {
-    const hobbies = this.form.get('hobbies')?.value
-      .map((item) =>
+    const hobbies = this.frontEndAuthorizationForm.get('hobbies')?.value
+      .map(item =>
         ({
           ...item,
-          duration: (item.duration + ' month'),
+          duration: item.duration + ' month',
         }));
 
     this.sendFormService.sendForm(<FormRequest>{
-      ...this.form.value,
+      ...this.frontEndAuthorizationForm.value,
       hobbies,
-      dateOfBirth: format((<FormControl>this.form.get('dateOfBirth'))?.value, 'dd-MM-yyyy'),
+      dateOfBirth: format((<FormControl>this.frontEndAuthorizationForm.get('dateOfBirth'))?.value, 'dd-MM-yyyy'),
     });
   }
 
-  private createHobbyFormGroup() {
+  private createHobbyFormGroup(): FormGroup<{ name: FormControl, duration: FormControl }> {
     return new FormGroup({
       name: new FormControl('', {validators: [Validators.required]}),
       duration: new FormControl('', {validators: [Validators.required]}),

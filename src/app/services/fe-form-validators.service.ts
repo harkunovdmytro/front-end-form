@@ -5,7 +5,7 @@ import {AsyncValidatorFn, AbstractControl, ValidationErrors} from '@angular/form
 import {SendFormService} from "./send-form.service";
 
 @Injectable()
-export class UsernameValidationService {
+export class FEFormValidationService {
   constructor(private sendFormService: SendFormService) {
   }
 
