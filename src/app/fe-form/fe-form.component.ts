@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
+import {format} from 'date-fns';
 import {SendFormService} from '../services/send-form.service';
 import {FormRequest} from '../interfaces/form-request';
 import {frameworks, frameworksVersions} from '../constants/form-constants';
-import {UsernameValidationService} from './fe-form-validators.service';
+import {UsernameValidationService} from '../services/fe-form-validators.service';
 
 @Component({
   selector: 'app-fe-form',
@@ -30,7 +31,7 @@ export class FeFormComponent implements OnInit {
       '',
       {
         validators: [Validators.required, Validators.email,],
-        asyncValidators: [this.usernameService.usernameValidator(),],
+        asyncValidators: [this.usernameService.usernameValidator(),]
       },
     ),
     hobbies: this.hobbies,
@@ -41,11 +42,12 @@ export class FeFormComponent implements OnInit {
   constructor(
     private sendFormService: SendFormService,
     private usernameService: UsernameValidationService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.form.controls.framework.valueChanges
-      .subscribe((e:string|null) => {
+      .subscribe((e: string | null) => {
         this.currentVersions$.next(this.frameworksVersions[String(e)]);
       });
   }
@@ -65,32 +67,23 @@ export class FeFormComponent implements OnInit {
   }
 
   postForm(): void {
-    const date = this.formatDate();
-
-    const hobbies = this.form.get('hobbies')?.value.map((item) => ({...item, duration: (item.duration + ' month')}));
+    const hobbies = this.form.get('hobbies')?.value
+      .map((item) =>
+        ({...item, duration: (item.duration + ' month')}));
 
     this.sendFormService.sendForm(<FormRequest>{
       ...this.form.value,
-      dateOfBirth: date,
       hobbies,
+      dateOfBirth: format(
+        new Date(Date.parse((<FormControl>this.form.get('dateOfBirth'))?.value))
+        , 'dd-MM-yyyy'),
     });
   }
 
   private createHobbyFormGroup() {
     return new FormGroup({
-      name: new FormControl('',),
-      duration: new FormControl('')
-    }, [Validators.required]);
-  }
-
-  private formatDate(): string {
-    const formDate = new Date(Date.parse((<FormControl>this.form.get('dateOfBirth'))?.value));
-
-    const day = formDate.getDate();
-    const month = formDate.getMonth() + 1;
-    const year = formDate.getFullYear();
-
-    return (day > 9 ? day : '0' + day) + '-'
-      + (month > 9 ? month : '0' + month) + '-' + year;
+      name: new FormControl('', {validators: [Validators.required,]}),
+      duration: new FormControl('', {validators: [Validators.required,]}),
+    });
   }
 }
