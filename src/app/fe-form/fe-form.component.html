@@ -1,0 +1,126 @@
+<section class="container">
+  <form
+    [formGroup]="frontEndAuthorizationForm"
+    (submit)="postForm()"
+  >
+    <mat-form-field>
+      <mat-label>First name</mat-label>
+      <input
+        matInput
+        formControlName="firstName"
+      >
+      <mat-hint *ngIf="isFieldValid('firstName')">This field is required.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Last name</mat-label>
+      <input
+        matInput
+        formControlName="lastName"
+      >
+      <mat-hint *ngIf="isFieldValid('lastName')">This field is required.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        formControlName="dateOfBirth"
+        [matDatepicker]="picker"
+      >
+      <mat-hint *ngIf="isFieldValid('dateOfBirth')">This field is required.</mat-hint>
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Choose a framework version</mat-label>
+      <mat-select
+        matInput
+        formControlName="framework"
+      >
+        <mat-option
+          *ngFor="let framework of frameworks "
+          [value]="framework"
+        >{{ framework}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Choose a framework version</mat-label>
+      <mat-select
+        matInput
+        formControlName="frameworkVersion"
+        [disabled]="!this.frontEndAuthorizationForm.value.framework"
+      >
+        <mat-option
+          *ngFor="let version of frameworksVersions[''+this.frontEndAuthorizationForm.value.framework]"
+          [value]="version"
+        >{{ version | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        formControlName="email"
+      >
+      <mat-hint *ngIf="frontEndAuthorizationForm.controls.email.errors?.['emailExist']">This email already exist.</mat-hint>
+    </mat-form-field>
+    <div
+      formArrayName="hobbies"
+      class="hobbies"
+    >
+      <div
+        *ngFor="let hobbyItem of hobbies.controls; let currentHobbieGroupId = index"
+        class="hobby-item"
+        [formGroupName]="currentHobbieGroupId"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>Hobby name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="name"
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hobby experience (month)</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="duration"
+          >
+        </mat-form-field>
+
+        <button
+          *ngIf="currentHobbieGroupId !== 0"
+          class="remove-hobby-btn"
+          mat-raised-button
+          color="warn"
+          (click)="removeHobby($event,currentHobbieGroupId)"
+        >Remove
+        </button>
+      </div>
+      <button
+        class="btn"
+        mat-stroked-button
+        (click)="addHobby($event)"
+      >Add hobby
+      </button>
+    </div>
+    <div>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="frontEndAuthorizationForm.invalid"
+      >Submit form
+      </button>
+    </div>
+  </form>
+</section>
